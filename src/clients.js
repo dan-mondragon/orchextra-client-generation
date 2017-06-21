@@ -1,9 +1,17 @@
 const axios = require('axios');
 const api = 'v1/clients';
 
-var getClients = (token, url)  => {
-  const clients = axios.get(`${url}/${api}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+var setUrl = (url) => {
+  this.url = url;
+};
+
+var setAuthToken = (token) => {
+  this.token = token;
+}
+
+var getClients = ()  => {
+  const clients = axios.get(`${this.url}/${api}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return clients.then((result) => {
@@ -15,9 +23,9 @@ var getClients = (token, url)  => {
 };
 
 
-var getClient = (token, url, clientId) => {
-  const client = axios.get(`${url}/${api}/${clientId}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+var getClient = (clientId) => {
+  const client = axios.get(`${this.url}/${api}/${clientId}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return client.then((result) => {
@@ -29,15 +37,15 @@ var getClient = (token, url, clientId) => {
 };
 
 
-var createClient = (token, url, client) => {
-  const add = axios.post(`${url}/${api}`, {
+var createClient = (client) => {
+  const add = axios.post(`${this.url}/${api}`, {
     type: client.type,
     name: client.name,
     clientId: client.clientId,
     clientSecret: client.clientSecret,
     userId: client.userId
   }, {
-    headers: {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
   });
 
   return add.then(result =>{
@@ -52,9 +60,9 @@ var createClient = (token, url, client) => {
 };
 
 
-var deleteClient = (token, url, clientId) => {
-  const del = axios.delete(`${url}/${api}/${clientId}`,{
-    headers: {'Authorization': 'Bearer ' + token}
+var deleteClient = (clientId) => {
+  const del = axios.delete(`${this.url}/${api}/${clientId}`,{
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return del.then(result => {
@@ -69,15 +77,15 @@ var deleteClient = (token, url, clientId) => {
 };
 
 
-var replaceClient = (token, url, clientId, client) => {
-  const replace = axios.put(`${url}/${api}/${clientId}`, {
+var replaceClient = (clientId, client) => {
+  const replace = axios.put(`${this.url}/${api}/${clientId}`, {
     type: client.type,
     name: client.name,
     clientId: client.clientId,
     clientSecret: client.clientSecret,
     userId: client.userId
   },{
-    headers: {'Authorization': 'Bearer ' + token}
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return replace.then(result =>{
@@ -86,7 +94,7 @@ var replaceClient = (token, url, clientId, client) => {
   .catch(error => {
     return {
       statusCode: error.response.status,
-      errors: error.response.data.errors.errors
+      errors: error.response.data
     };
   });
 };
@@ -97,5 +105,7 @@ module.exports = {
   getClient,
   createClient,
   deleteClient,
-  replaceClient
+  replaceClient,
+  setUrl,
+  setAuthToken
 };

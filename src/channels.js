@@ -1,16 +1,22 @@
 const axios = require('axios');
-var rp = require('request-promise');
-var FormData = require('form-data');
 const api = 'v1/channels';
 const channelUtils = require('./fn/channels');
 
-var getChannels = (token, url, w, fields)  => {
+var setUrl = (url) => {
+  this.url = url;
+};
+
+var setAuthToken = (token) => {
+  this.token = token;
+}
+
+var getChannels = (w, fields)  => {
   var withString = channelUtils.setWith(w);
   var fieldsString = channelUtils.setFields(fields);
 
   console.log(withString);
-  const channels = axios.get(`${url}/${api}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+  const channels = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return channels.then((result) => {
@@ -24,12 +30,12 @@ var getChannels = (token, url, w, fields)  => {
   });
 };
 
-var getChannel = (token, url, idChannel, w, fields) => {
+var getChannel = (idChannel, w, fields) => {
   var withString = channelUtils.setWith(w);
   var fieldsString = channelUtils.setFields(fields);
 
-  const channel = axios.get(`${url}/${api}/${idChannel}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+  const channel = axios.get(`${this.url}/${api}/${idChannel}?with=${withString}&fields=${fieldsString}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return channel.then((result) => {
@@ -44,9 +50,9 @@ var getChannel = (token, url, idChannel, w, fields) => {
 };
 
 
-var createChannel = (token, url, channel) => {
-  const add = axios.post(`${url}/${api}`, channel, {
-    headers: {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}
+var createChannel = (channel) => {
+  const add = axios.post(`${this.url}/${api}`, channel, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
   });
 
   return add.then(result =>{
@@ -60,9 +66,9 @@ var createChannel = (token, url, channel) => {
   });
 };
 
-var deleteChannel = (token, url, channelId) => {
-  const del = axios.delete(`${url}/${api}/${channelId}`,{
-    headers: {'Authorization': 'Bearer ' + token}
+var deleteChannel = (channelId) => {
+  const del = axios.delete(`${this.url}/${api}/${channelId}`,{
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return del.then(result => {
@@ -76,9 +82,9 @@ var deleteChannel = (token, url, channelId) => {
   });
 };
 
-var updateChannel = (token, url, channelId, channel) => {
-  const update = axios.patch(`${url}/${api}/${channelId}`, channel, {
-    headers: {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}
+var updateChannel = (channelId, channel) => {
+  const update = axios.patch(`${this.url}/${api}/${channelId}`, channel, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
   });
 
   return update.then(result => {
@@ -92,9 +98,9 @@ var updateChannel = (token, url, channelId, channel) => {
   });
 };
 
-var replaceChannel = (token, url, channelId, channel) => {
-  const update = axios.put(`${url}/${api}/${channelId}`, channel, {
-    headers: {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}
+var replaceChannel = (channelId, channel) => {
+  const update = axios.put(`${this.url}/${api}/${channelId}`, channel, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
   });
 
   return update.then(result => {
@@ -114,5 +120,7 @@ module.exports = {
   createChannel,
   deleteChannel,
   updateChannel,
-  replaceChannel
+  replaceChannel,
+  setUrl,
+  setAuthToken
 }

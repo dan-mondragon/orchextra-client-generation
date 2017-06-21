@@ -1,9 +1,17 @@
 const axios = require('axios');
 const api = 'v1/users';
 
-var getUsers = (token, url)  => {
-  const users = axios.get(`${url}/${api}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+var setUrl = (url) => {
+  this.url = url;
+};
+
+var setAuthToken = (token) => {
+  this.token = token;
+}
+
+var getUsers = ()  => {
+  const users = axios.get(`${this.url}/${api}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return users.then((result) => {
@@ -15,9 +23,9 @@ var getUsers = (token, url)  => {
 };
 
 
-var getUser = (token, url, userId) => {
-  const user = axios.get(`${url}/${api}/${userId}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+var getUser = (userId) => {
+  const user = axios.get(`${this.url}/${api}/${userId}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return user.then((result) => {
@@ -29,9 +37,9 @@ var getUser = (token, url, userId) => {
 };
 
 
-var createUser = (token, url, user) => {
-  const add = axios.post(`${url}/${api}`, user, {
-    headers: {'Authorization': 'Bearer ' + token}
+var createUser = (user) => {
+  const add = axios.post(`${this.url}/${api}`, user, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return add.then(result =>{
@@ -45,10 +53,9 @@ var createUser = (token, url, user) => {
   });
 };
 
-
-var deleteUser = (token, url, userId) => {
-  const del = axios.delete(`${url}/${api}/${userId}`,{
-    headers: {'Authorization': 'Bearer ' + token}
+var deleteUser = (userId) => {
+  const del = axios.delete(`${this.url}/${api}/${userId}`,{
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return del.then(result => {
@@ -62,9 +69,9 @@ var deleteUser = (token, url, userId) => {
   });
 };
 
-var replaceUser = (token, url, userId, user) => {
-  const replace = axios.put(`${url}/${api}/${userId}`, user,{
-    headers: {'Authorization': 'Bearer ' + token}
+var replaceUser = (userId, user) => {
+  const replace = axios.put(`${this.url}/${api}/${userId}`, user,{
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return replace.then(result =>{
@@ -84,5 +91,7 @@ module.exports ={
   getUser,
   createUser,
   deleteUser,
-  replaceUser
+  replaceUser,
+  setUrl,
+  setAuthToken
 };
