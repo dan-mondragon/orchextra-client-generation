@@ -1,6 +1,6 @@
 {
   "name": "orchextra-client-generation",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Orchextra SDK para el consumo del módulo de Genereación.",
   "main": "campaign.js",
   "scripts": {
