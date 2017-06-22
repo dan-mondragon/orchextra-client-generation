@@ -1,6 +1,6 @@
 # Orchextra-client-generation
 
-Orchextra SDK para el consumo del módulo de Genreación.
+Orchextra SDK para el consumo del módulo de Generación.
 
 ### Instalación (npm)
 ```js
@@ -8,13 +8,13 @@ npm install orchextra-client-generation
 ```
 ## Ejemplos
 
-###Campañas
+### Campañas
 ```js
 var campaignsApi = require('orchextra-client-generation/campaigns');
 campaignsApi.setUrl('https://generation-api-coupons.s.gigigoapps.com');
 campaignsApi.setAuthToken('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 ```
-#### Listado de Usuarios
+#### Listado de Campañas
 ```js
 var _with = {
   users: ['clients'],
@@ -30,7 +30,7 @@ campaignsApi.getCampaigns(_with, fields).then(campaigns => {
   console.log(error);
 });
 ```
-#### Información de Usuario
+#### Información de Campaña
 ```js
 const idCampaign = '5949a2a83157b629aab3eb2a';
 campaignsApi.getCampaign(idCampaign, _with, fields).then(campaign => {
@@ -41,7 +41,7 @@ campaignsApi.getCampaign(idCampaign, _with, fields).then(campaign => {
 });
 
 ```
-#### Crear Usuario
+#### Crear Campaña
 ```js
 var campaign = {
   type: "digital",
@@ -60,7 +60,7 @@ campaignsApi.createCampaign(campaign).then(campaign => {
   console.log(error);
 });
 ```
-#### Eliminar Usuario
+#### Eliminar Campaña
 ```js
 campaignsApi.deleteCampaign(idCampaign).then(campaign => {
   console.log(campaign);

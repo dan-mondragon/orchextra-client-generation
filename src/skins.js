@@ -2,11 +2,23 @@ const axios = require('axios');
 var rp = require('request-promise');
 var FormData = require('form-data');
 const api = 'v1/skins';
+const skinsUtils = require('./fn/skins');
+
+var setUrl = (url) => {
+  this.url = url;
+};
+
+var setAuthToken = (token) => {
+  this.token = token;
+}
 
 
-var getSkins = (token, url)  => {
-  const skins = axios.get(`${url}/${api}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+var getSkins = (w, fields)  => {
+  var withString = skinsUtils.setWith(w);
+  var fieldsString = skinsUtils.setFields(fields);
+
+  const skins = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return skins.then((result) => {
@@ -56,10 +68,10 @@ var getSkins = (token, url)  => {
 // };
 
 
-var createSkin = (token, url, skin) => {
+var createSkin = (skin) => {
   var options = {
     method: 'POST',
-    uri: `${url}/${api}`,
+    uri: `${this.url}/${api}`,
     formData: {
         name: skin.name,
         projectId: skin.projectId,
@@ -75,7 +87,7 @@ var createSkin = (token, url, skin) => {
     },
     json: true,
     headers: {
-      'Authorization': 'Bearer ' + token,
+      'Authorization': 'Bearer ' + this.token,
       'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
     }
   };
@@ -96,5 +108,7 @@ var createSkin = (token, url, skin) => {
 
 module.exports ={
   getSkins,
-  createSkin
+  createSkin,
+  setUrl,
+  setAuthToken
 }

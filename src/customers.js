@@ -1,16 +1,22 @@
 const axios = require('axios');
-var rp = require('request-promise');
-var FormData = require('form-data');
 const api = 'v1/customers';
 const projectUtils = require('./fn/projects');
 
-var getCustomers = (token, url, w, fields)  => {
+var setUrl = (url) => {
+  this.url = url;
+};
+
+var setAuthToken = (token) => {
+  this.token = token;
+}
+
+var getCustomers = (w, fields)  => {
   var withString = projectUtils.setWith(w);
   var fieldsString = projectUtils.setFields(fields);
 
   console.log(withString);
-  const projects = axios.get(`${url}/${api}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+  const projects = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return projects.then((result) => {
@@ -25,12 +31,12 @@ var getCustomers = (token, url, w, fields)  => {
 };
 
 
-var getCustomer = (token, url, idCustomer, w, fields) => {
+var getCustomer = (idCustomer, w, fields) => {
   var withString = channelUtils.setWith(w);
   var fieldsString = channelUtils.setFields(fields);
 
-  const customer = axios.get(`${url}/${api}/${idCustomer}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+  const customer = axios.get(`${this.url}/${api}/${idCustomer}?with=${withString}&fields=${fieldsString}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return customer.then((result) => {
@@ -46,5 +52,7 @@ var getCustomer = (token, url, idCustomer, w, fields) => {
 
 module.exports = {
   getCustomers,
-  getCustomer
+  getCustomer,
+  setUrl,
+  setAuthToken
 };

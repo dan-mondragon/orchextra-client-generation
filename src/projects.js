@@ -1,16 +1,21 @@
 const axios = require('axios');
-var rp = require('request-promise');
-var FormData = require('form-data');
 const api = 'v1/projects';
 const projectUtils = require('./fn/projects');
 
+var setUrl = (url) => {
+  this.url = url;
+};
 
-var getProjects = (token, url, w, fields)  => {
+var setAuthToken = (token) => {
+  this.token = token;
+}
+
+var getProjects = (w, fields)  => {
   var withString = projectUtils.setWith(w);
   var fieldsString = projectUtils.setFields(fields);
 
-  const projects = axios.get(`${url}/${api}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+  const projects = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return projects.then((result) => {
@@ -24,11 +29,11 @@ var getProjects = (token, url, w, fields)  => {
   });
 };
 
-var getProject = (token, url, idProject, w, fields)  => {
+var getProject = (idProject, w, fields)  => {
   var withString = projectUtils.setWith(w);
   var fieldsString = projectUtils.setFields(fields);
-  const project = axios.get(`${url}/${api}/${idProject}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+  const project = axios.get(`${this.url}/${api}/${idProject}?with=${withString}&fields=${fieldsString}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return project.then((result) => {
@@ -42,9 +47,9 @@ var getProject = (token, url, idProject, w, fields)  => {
   });
 };
 
-var createProject = (token, url, project) => {
-  const add = axios.post(`${url}/${api}`, project, {
-    headers: {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}
+var createProject = (project) => {
+  const add = axios.post(`${this.url}/${api}`, project, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
   });
 
   return add.then(result =>{
@@ -58,9 +63,9 @@ var createProject = (token, url, project) => {
   });
 };
 
-var deleteProject = (token, url, idProject)  => {
-  const project = axios.delete(`${url}/${api}/${idProject}`, {
-    headers: {'Authorization': 'Bearer ' + token}
+var deleteProject = (idProject)  => {
+  const project = axios.delete(`${this.url}/${api}/${idProject}`, {
+    headers: {'Authorization': 'Bearer ' + this.token}
   });
 
   return project.then((result) => {
@@ -74,9 +79,9 @@ var deleteProject = (token, url, idProject)  => {
   });
 };
 
-var updateProject = (token, url, projectlId, project) => {
-  const update = axios.patch(`${url}/${api}/${projectlId}`, project, {
-    headers: {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}
+var updateProject = (projectlId, project) => {
+  const update = axios.patch(`${this.url}/${api}/${projectlId}`, project, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
   });
 
   return update.then(result => {
@@ -90,9 +95,9 @@ var updateProject = (token, url, projectlId, project) => {
   });
 };
 
-var replaceProject = (token, url, projectlId, project) => {
-  const update = axios.put(`${url}/${api}/${projectlId}`, project, {
-    headers: {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}
+var replaceProject = (projectlId, project) => {
+  const update = axios.put(`${this.url}/${api}/${projectlId}`, project, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
   });
 
   return update.then(result => {
@@ -114,5 +119,7 @@ module.exports = {
   createProject,
   deleteProject,
   updateProject,
-  replaceProject
+  replaceProject,
+  setUrl,
+  setAuthToken
 };

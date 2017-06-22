@@ -1,5 +1,6 @@
 const axios = require('axios');
 const api = 'v1/clients';
+const clientsUtils = require('./fn/clients');
 
 var setUrl = (url) => {
   this.url = url;
@@ -9,8 +10,11 @@ var setAuthToken = (token) => {
   this.token = token;
 }
 
-var getClients = ()  => {
-  const clients = axios.get(`${this.url}/${api}`, {
+var getClients = (w, fields)  => {
+  var withString = clientsUtils.setWith(w);
+  var fieldsString = clientsUtils.setFields(fields);
+
+  const clients = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
     headers: {'Authorization': 'Bearer ' + this.token}
   });
 
@@ -18,13 +22,19 @@ var getClients = ()  => {
     return result.data;
   })
   .catch(error => {
-    return error.code;
+    return {
+      statusCode: error.response.status,
+      errors: error.response.data
+    };
   });
 };
 
 
-var getClient = (clientId) => {
-  const client = axios.get(`${this.url}/${api}/${clientId}`, {
+var getClient = (clientId, w, fields) => {
+  var withString = clientsUtils.setWith(w);
+  var fieldsString = clientsUtils.setFields(fields);
+
+  const client = axios.get(`${this.url}/${api}/${clientId}?with=${withString}&fields=${fieldsString}`, {
     headers: {'Authorization': 'Bearer ' + this.token}
   });
 
@@ -32,7 +42,10 @@ var getClient = (clientId) => {
     return result.data;
   })
   .catch(error => {
-    return error.response.status;
+    return {
+      statusCode: error.response.status,
+      errors: error.response.data
+    };
   })
 };
 

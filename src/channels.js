@@ -14,7 +14,6 @@ var getChannels = (w, fields)  => {
   var withString = channelUtils.setWith(w);
   var fieldsString = channelUtils.setFields(fields);
 
-  console.log(withString);
   const channels = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
     headers: {'Authorization': 'Bearer ' + this.token}
   });
