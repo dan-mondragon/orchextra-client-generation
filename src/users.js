@@ -1,11 +1,15 @@
 const axios = require('axios');
 const api = 'v1/users';
 
+module.exports=
 class User {
 
-  constructor(url, token){
+  constructor(url, token, user){
     this.url = url;
     this.token = token;
+    if(typeof user !== 'undefined'){
+      this.user = user;
+    }
   }
 
   getUsers() {
@@ -28,9 +32,10 @@ class User {
     });
 
     return user.then((result) => {
-      return result.data;
+      return new User(this.url, this.token, result.data);
     })
     .catch(error => {
+      console.log(error);
       return error.response.status;
     })
   }
@@ -53,6 +58,10 @@ class User {
   }
 
   deleteUser (userId) {
+    if(typeof userId === 'undefined'){
+        userId = this.user.id;
+    }
+    console.log(userId);
     const del = axios.delete(`${this.url}/${api}/${userId}`,{
       headers: {'Authorization': 'Bearer ' + this.token}
     });
@@ -86,10 +95,6 @@ class User {
 }
 
 // console.log(new User('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI'));
-
-module.exports = {
-  class: User
-}
 
 //
 // module.exports ={

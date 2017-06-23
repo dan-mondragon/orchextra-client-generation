@@ -1,5 +1,5 @@
 {
-  "name": "orchextra-client-generation",
+  "name": "orchextra-client-generation-code",
   "version": "1.0.4",
   "description": "Orchextra SDK para el consumo del módulo de Genereación.",
   "main": "campaign.js",
@@ -52,6 +52,7 @@
     "axios": "^0.16.2",
     "form-data": "^2.2.0",
     "orchextra-client": "^4.0.0",
+    "orchextra-client-generation": "^1.0.4",
     "querystring": "^0.2.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
