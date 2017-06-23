@@ -100,11 +100,46 @@ var deleteCampaign = (idCampaign) => {
 };
 
 
+var updateCampaign = (campaignId, campaign) => {
+  const update = axios.patch(`${this.url}/${api}/${campaignId}`, campaign, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+  });
+
+  return update.then(result => {
+    return result.data;
+  })
+  .catch(error => {
+    return {
+      statusCode: error.response.status,
+      errors: error.response.data
+    };
+  });
+};
+
+var replaceCampaign = (campaignId, campaign) => {
+  const update = axios.put(`${this.url}/${api}/${campaignId}`, campaign, {
+    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+  });
+
+  return update.then(result => {
+    return result.data;
+  })
+  .catch(error => {
+    return {
+      statusCode: error.response.status,
+      errors: error.response.data
+    };
+  });
+};
+
+
 module.exports = {
   getCampaigns,
   getCampaign,
   deleteCampaign,
   createCampaign,
   setUrl,
-  setAuthToken
+  setAuthToken,
+  updateCampaign,
+  replaceCampaign
 };

@@ -3,7 +3,7 @@ var Auth = require('orchextra-client')
 var auth = new Auth('https://auth-api-coupons.s.gigigoapps.com')
 
 const idUser = '5942fdfb3157b629aab3eae8';
-const idCampaign = '5949a2a83157b629aab3eb2a';
+const idCampaign = '594beb213157b629aab3eb5b';
 const fs = require('fs');
 
 // var w = {};
@@ -27,34 +27,49 @@ var campaign = {
   active: 'true',
   expirationDate: "2018-06-20T00:00:00.000Z",
   startDate: "2017-06-20T00:00:00.000Z",
-  projectId: "592ef58012638c2edb5e45a8",
+  projectId: "5949957e3157b629aab3eb28",
   image: fs.createReadStream('facebook_318-136394.jpg')
 };
 
-campaignsApi.getCampaigns(_with, fields).then(campaigns => {
-  campaigns.forEach((campaign) => console.log(campaign));
-  // console.log(campaigns[0].user.clients);
-})
-.catch(error => {
-  console.log(error);
-});
+// campaignsApi.getCampaigns(_with, fields).then(campaigns => {
+//   campaigns.forEach((campaign) => console.log(campaign));
+//   // console.log(campaigns[0].user.clients);
+// })
+// .catch(error => {
+//   console.log(error);
+// });
+//
+// campaignsApi.getCampaign(idCampaign, _with, fields).then(campaign => {
+//   console.log(campaign);
+// })
+// .catch(error => {
+//   console.log(error);
+// });
+//
+// campaignsApi.deleteCampaign(idCampaign).then(campaign => {
+//   console.log(campaign);
+// })
+// .catch(error => {
+//   console.log(error);
+// });
+//
+// campaignsApi.createCampaign(campaign).then(campaign => {
+//   console.log(campaign);
+// }).catch(error => {
+//   console.log(error);
+// });
 
-campaignsApi.getCampaign(idCampaign, _with, fields).then(campaign => {
+campaignsApi.updateCampaign(idCampaign, campaign).then(campaign => {
   console.log(campaign);
 })
 .catch(error => {
   console.log(error);
 });
 
-campaignsApi.deleteCampaign(idCampaign).then(campaign => {
-  console.log(campaign);
-})
-.catch(error => {
-  console.log(error);
-});
 
-campaignsApi.createCampaign(campaign).then(campaign => {
-  console.log(campaign);
-}).catch(error => {
-  console.log(error);
-});
+// campaignsApi.replaceCampaign(idCampaign, campaign).then(campaign => {
+//   console.log(campaign);
+// })
+// .catch(error => {
+//   console.log(error);
+// });
