@@ -10,20 +10,18 @@ npm install orchextra-client-generation
 
 ### Campañas
 ```js
-var campaignsApi = require('orchextra-client-generation/campaigns');
-campaignsApi.setUrl('https://generation-api-coupons.s.gigigoapps.com');
-campaignsApi.setAuthToken('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+var Campaign = require('orchextra-client-generation/campaigns');
+var campaign = new Campaign('https://generation-api-coupons.s.gigigoapps.com', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 ```
 #### Listado de Campañas
 ```js
-var _with = {
-  users: ['clients'],
-  projects: [],
-  channels: []
+var query = {
+    _with: [],
+    fields: ['image','description'],
+    filter: ['description=campaña prueba']
 };
-var fields = ['legals', 'description'];
 
-campaignsApi.getCampaigns(_with, fields).then(campaigns => {
+campaign.getCampaigns(query).then(campaigns => {
   campaigns.forEach((campaign) => console.log(campaign));
 })
 .catch(error => {
@@ -32,29 +30,29 @@ campaignsApi.getCampaigns(_with, fields).then(campaigns => {
 ```
 #### Información de Campaña
 ```js
-const idCampaign = '5949a2a83157b629aab3eb2a';
-campaignsApi.getCampaign(idCampaign, _with, fields).then(campaign => {
+const idCampaign = '594beaff3157b629aab3eb5a';
+
+campaign.getCampaign(idCampaign).then(campaign => {
   console.log(campaign);
 })
 .catch(error => {
   console.log(error);
 });
-
 ```
 #### Crear Campaña
 ```js
-var campaign = {
+var campaignModel = {
   type: "digital",
-  name: "campaña nueva",
+  name: "campaña nueva 2",
   legals: "Legales",
   description: "Descripción",
   active: 'true',
   expirationDate: "2018-06-20T00:00:00.000Z",
   startDate: "2017-06-20T00:00:00.000Z",
-  projectId: "592ef58012638c2edb5e45a8",
+  projectId: "5949957e3157b629aab3eb28",
   image: fs.createReadStream('facebook_318-136394.jpg')
 };
-campaignsApi.createCampaign(campaign).then(campaign => {
+campaign.createCampaign(campaignModel).then(campaign => {
   console.log(campaign);
 }).catch(error => {
   console.log(error);
@@ -62,8 +60,43 @@ campaignsApi.createCampaign(campaign).then(campaign => {
 ```
 #### Eliminar Campaña
 ```js
-campaignsApi.deleteCampaign(idCampaign).then(campaign => {
+campaign.deleteCampaign(idCampaign).then(campaign => {
   console.log(campaign);
+})
+.catch(error => {
+  console.log(error);
+});
+```
+#### Actualizar Campaña
+```js
+campaign.updateCampaign(campaignModel, idCampaign).then(campaign => {
+  console.log(campaign);
+})
+.catch(error => {
+  console.log(error);
+});
+```
+#### Reemplazar Campaña
+```js
+campaign.replaceCampaign(campaignModel, idCampaign).then(campaign => {
+  console.log(campaign);
+})
+.catch(error => {
+  console.log(error);
+});
+```
+#### Trabajar con objetos
+Debido a que los métodos devuelven un objeto (en este caso del tipo "Campaign"), es posible realizar acciones sobre ellos.
+Por ejemplo, eliminar la campaña actual. Para lo anterior, ya no es necesario enviar el id.
+```js
+campaign.getCampaign(idCampaign).then(campaignReturned => {
+  console.log(campaignReturned);
+  campaignReturned.deleteCampaign().then(campaign => {
+    console.log(campaign);
+  })
+  .catch(error => {
+    console.log(error);
+  });
 })
 .catch(error => {
   console.log(error);
@@ -72,14 +105,18 @@ campaignsApi.deleteCampaign(idCampaign).then(campaign => {
 
 ### Usuarios
 ```js
-var usersApi = require('orchextra-client-generation/users');
-usersApi.setUrl('https://generation-api-coupons.s.gigigoapps.com');
-usersApi.setAuthToken('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+var User = require('../src/users');
+var user = new User('https://generation-api-coupons.s.gigigoapps.com', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 ```
 #### Listado de Usuarios
 ```js
-usersApi.getUsers().then(users => {
-  users.forEach((user) => console.log(user.id));
+var query = {
+    _with: [],
+    fields: ['role','name'],
+    filter: ['name=Nehomar Correa']
+};
+user.getUsers(query).then(users => {  
+  users.forEach((user) => console.log(user.data));
 })
 .catch(error => {
   console.log(error);
@@ -88,7 +125,7 @@ usersApi.getUsers().then(users => {
 #### Información de Usuario
 ```js
 const idUser = '5942f7c73157b629aab3eae4';
-usersApi.getUser(idUser).then(user => {
+user.getUser(idUser).then(user => {
   console.log(user);
 })
 .catch(error => {
@@ -98,17 +135,17 @@ usersApi.getUser(idUser).then(user => {
 ```
 #### Crear Usuario
 ```js
-var user = {
-  name: 'Daniel',
-  email: 'daniel@gigigo.com.mx',
-  username: 'Daniel',
+var userModel = {
+  name: 'Ricardo ',
+  email: 'test_test4@gmail.com.mx',
+  username: 'Ricardo 4',
   role: 'Role',
-  password: 'gigigo',
-  passwordConfirmation: 'gigigo',
+  password: 'Password1',
+  passwordConfirmation: 'Password1',
   languageCode: 'es',
   projectsIds: ["5936cb98d318c404f94951e2"]
 };
-usersApi.createUser(user).then(user => {
+user.createUser(userModel).then(user => {
   console.log(user);
 }).catch(error => {
   console.log(error);
@@ -116,7 +153,7 @@ usersApi.createUser(user).then(user => {
 ```
 #### Eliminar Usuario
 ```js
-usersApi.deleteUser(idUser).then(user => {
+user.deleteUser(idUser).then(user => {
   console.log(user);
 })
 .catch(error => {
@@ -125,9 +162,35 @@ usersApi.deleteUser(idUser).then(user => {
 ```
 #### Reemplazar Usuario
 ```js
-usersApi.replaceUser(idUser, user).then(user => {
+user.replaceUser(userModel,idUser).then(user => {
   console.log(user);
 }).catch(error => {
+  console.log(error);
+});
+```
+#### Actualizar Usuario
+```js
+user.updateUser(userModel,idUser).then(user => {
+  console.log(user);
+}).catch(error => {
+  console.log(error);
+});
+```
+#### Trabajar con objetos
+Debido a que los métodos devuelven un objeto (en este caso del tipo "User"), es posible realizar acciones sobre ellos.
+Por ejemplo, eliminar un usuario de tu arreglo de usuarios. Para lo anterior, ya no es necesario enviar el id.
+```js
+
+user.getUsers(query).then(users => {  
+  users.forEach((user) => console.log(user.data));
+  users[4].deleteUser().then(user => {
+      console.log(user);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+})
+.catch(error => {
   console.log(error);
 });
 ```

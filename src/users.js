@@ -104,7 +104,27 @@ class User {
         errors: error.response.data
       };
     });
-  };
+  }
+
+  updateUser (user, userId) {
+    if(typeof userId === 'undefined'){
+        userId = this.data.id;
+    }
+    const update = axios.patch(`${this.url}/${api}/${userId}`, user,{
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return update.then(result =>{
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
 }
 
 // console.log(new User('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI'));

@@ -15,7 +15,7 @@
 var User = require('../src/users');
 var user = new User('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI');
 
-const idUser = '592ee7d0b46c2cbdc2ace58c';
+const idUser = '59514fc83157b629aab3eb84';
 
 var userModel = {
   name: 'Ricardo 4',
@@ -48,39 +48,45 @@ user.getUsers(query).then(users => {
   console.log(error);
 });
 
-// user.getUser(idUser).then(returnedUser => {
-//   console.log(returnedUser);
-//   // returnedUser.replaceUser(userModel).then(user => {
-//   //   console.log(user);
-//   // }).catch(error => {
-//   //   console.log(error);
-//   // });
-//   // returnedUser.deleteUser().then(user => {
-//   //   console.log(user);
-//   // })
-//   // .catch(error => {
-//   //   console.log(error);
-//   // });
-// })
-// .catch(error => {
-//   console.log(error);
-// });
+user.getUser(idUser).then(returnedUser => {
+  console.log(returnedUser);
+  // returnedUser.replaceUser(userModel).then(user => {
+  //   console.log(user);
+  // }).catch(error => {
+  //   console.log(error);
+  // });
+  // returnedUser.deleteUser().then(user => {
+  //   console.log(user);
+  // })
+  // .catch(error => {
+  //   console.log(error);
+  // });
+})
+.catch(error => {
+  console.log(error);
+});
 
-// user.createUser(userModel).then(user => {
-//   console.log(user);
-// }).catch(error => {
-//   console.log(error);
-// });
+user.createUser(userModel).then(user => {
+  console.log(user);
+}).catch(error => {
+  console.log(error);
+});
 
-// user.deleteUser(idUser).then(user => {
-//   console.log(user);
-// })
-// .catch(error => {
-//   console.log(error);
-// });
+user.deleteUser(idUser).then(user => {
+  console.log(user);
+})
+.catch(error => {
+  console.log(error);
+});
 
-// user.replaceUser(userModel,idUser).then(user => {
-//   console.log(user);
-// }).catch(error => {
-//   console.log(error);
-// });
+user.replaceUser(userModel,idUser).then(user => {
+  console.log(user);
+}).catch(error => {
+  console.log(error);
+});
+
+user.updateUser(userModel,idUser).then(user => {
+  console.log(user);
+}).catch(error => {
+  console.log(error);
+});

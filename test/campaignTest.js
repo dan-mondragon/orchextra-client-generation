@@ -9,8 +9,8 @@ var campaign = new Campaign('https://generation-api-coupons.s.gigigoapps.com', '
 
 var query = {
     _with: [],
-    fields: ['image'],
-    filter: ['description=Esto es una prueba']
+    fields: ['image','description'],
+    filter: ['description=campaña prueba']
 };
 
 var campaignModel = {
@@ -21,17 +21,17 @@ var campaignModel = {
   active: 'true',
   expirationDate: "2018-06-20T00:00:00.000Z",
   startDate: "2017-06-20T00:00:00.000Z",
-  projectId: "5949957e3157b629aab3eb28"
-  // image: fs.createReadStream('facebook_318-136394.jpg')
+  projectId: "5949957e3157b629aab3eb28",
+  image: fs.createReadStream('facebook_318-136394.jpg')
 };
 
-// campaign.getCampaigns(query).then(campaigns => {
-//   campaigns.forEach((campaign) => console.log(campaign));
-//   // console.log(campaigns[0].user.clients);
-// })
-// .catch(error => {
-//   console.log(error);
-// });
+campaign.getCampaigns(query).then(campaigns => {
+  campaigns.forEach((campaign) => console.log(campaign));
+  // console.log(campaigns[0].user.clients);
+})
+.catch(error => {
+  console.log(error);
+});
 
 // campaign.getCampaign(idCampaign).then(campaignReturned => {
 //   // console.log(campaignReturned);
@@ -54,18 +54,18 @@ var campaignModel = {
 //   console.log(error);
 // });
 
-// campaign.deleteCampaign(idCampaign).then(campaign => {
-//   console.log(campaign);
-// })
-// .catch(error => {
-//   console.log(error);
-// });
+campaign.deleteCampaign(idCampaign).then(campaign => {
+  console.log(campaign);
+})
+.catch(error => {
+  console.log(error);
+});
 
-// campaign.createCampaign(campaignModel).then(campaign => {
-//   console.log(campaign);
-// }).catch(error => {
-//   console.log(error);
-// });
+campaign.createCampaign(campaignModel).then(campaign => {
+  console.log(campaign);
+}).catch(error => {
+  console.log(error);
+});
 
 campaign.updateCampaign(campaignModel, idCampaign).then(campaign => {
   console.log(campaign);
@@ -75,9 +75,9 @@ campaign.updateCampaign(campaignModel, idCampaign).then(campaign => {
 });
 
 
-// campaign.replaceCampaign(campaignModel, idCampaign).then(campaign => {
-//   console.log(campaign);
-// })
-// .catch(error => {
-//   console.log(error);
-// });
+campaign.replaceCampaign(campaignModel, idCampaign).then(campaign => {
+  console.log(campaign);
+})
+.catch(error => {
+  console.log(error);
+});
