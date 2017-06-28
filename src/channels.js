@@ -1,125 +1,139 @@
 const axios = require('axios');
 const api = 'v1/channels';
-const channelUtils = require('./fn/channels');
+const queryFn = require('./fn/QueryString');
 
-var setUrl = (url) => {
-  this.url = url;
-};
+module.exports=
+class Channel {
+  constructor(url, token, channel){
+    this.url = url;
+    this.token = token;
+    if(typeof channel !== 'undefined'){
+      this.data = channel;
+    }
+  }
 
-var setAuthToken = (token) => {
-  this.token = token;
+  getChannels(query){
+    var queryString = queryFn.setQueryString(query);
+    const channels = axios.get(`${this.url}/${api}?${queryString}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return channels.then((result) => {
+      var Channels = new Array();
+      result.data.forEach(channel => {
+        Channels.push(new Channel(this.url, this.token, channel));
+      });
+      return Channels;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  getChannel(idChannel, query){
+    var queryString = queryFn.setQueryString(query);
+    const channel = axios.get(`${this.url}/${api}/${idChannel}?${queryString}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return channel.then((result) => {
+      return new Channel(this.url, this.token, result.data);
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+
+  createChannel(channel){
+    const add = axios.post(`${this.url}/${api}`, channel, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
+
+    return add.then(result =>{
+      return new Channel(this.url, this.token, result.data);
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  deleteChannel(channelId){
+    if(typeof channelId === 'undefined'){
+        channelId = this.data.id;
+    }
+    const del = axios.delete(`${this.url}/${api}/${channelId}`,{
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return del.then(result => {
+      return result.status;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  updateChannel(channel, channelId){
+    if(typeof channelId === 'undefined'){
+        channelId = this.data.id;
+    }
+    const update = axios.patch(`${this.url}/${api}/${channelId}`, channel, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
+
+    return update.then(result => {
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  replaceChannel(channel, channelId){
+    if(typeof channelId === 'undefined'){
+        channelId = this.data.id;
+    }
+    const update = axios.put(`${this.url}/${api}/${channelId}`, channel, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
+
+    return update.then(result => {
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
 }
 
-var getChannels = (w, fields)  => {
-  var withString = channelUtils.setWith(w);
-  var fieldsString = channelUtils.setFields(fields);
-
-  const channels = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return channels.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var getChannel = (idChannel, w, fields) => {
-  var withString = channelUtils.setWith(w);
-  var fieldsString = channelUtils.setFields(fields);
-
-  const channel = axios.get(`${this.url}/${api}/${idChannel}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return channel.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-
-var createChannel = (channel) => {
-  const add = axios.post(`${this.url}/${api}`, channel, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
-
-  return add.then(result =>{
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var deleteChannel = (channelId) => {
-  const del = axios.delete(`${this.url}/${api}/${channelId}`,{
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return del.then(result => {
-    return result.status;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var updateChannel = (channelId, channel) => {
-  const update = axios.patch(`${this.url}/${api}/${channelId}`, channel, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
-
-  return update.then(result => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var replaceChannel = (channelId, channel) => {
-  const update = axios.put(`${this.url}/${api}/${channelId}`, channel, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
-
-  return update.then(result => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-module.exports = {
-  getChannels,
-  getChannel,
-  createChannel,
-  deleteChannel,
-  updateChannel,
-  replaceChannel,
-  setUrl,
-  setAuthToken
-}
+// module.exports = {
+//   getChannels,
+//   getChannel,
+//   createChannel,
+//   deleteChannel,
+//   updateChannel,
+//   replaceChannel,
+//   setUrl,
+//   setAuthToken
+// }

@@ -2,147 +2,161 @@ const axios = require('axios');
 var rp = require('request-promise');
 var FormData = require('form-data');
 const api = 'v1/skins';
-const skinsUtils = require('./fn/skins');
+const queryFn = require('./fn/QueryString');
 
-var setUrl = (url) => {
-  this.url = url;
-};
+module.exports=
+class Skin {
 
-var setAuthToken = (token) => {
-  this.token = token;
-}
-
-
-var getSkins = (w, fields)  => {
-  var withString = skinsUtils.setWith(w);
-  var fieldsString = skinsUtils.setFields(fields);
-
-  const skins = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return skins.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return error.code;
-  });
-};
-
-var getSkin = (idSkin, w, fields) => {
-  var withString = skinsUtils.setWith(w);
-  var fieldsString = skinsUtils.setFields(fields);
-
-  const skin = axios.get(`${this.url}/${api}/${idSkin}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return skin.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var createSkin = (skin) => {
-  var options = {
-    method: 'POST',
-    uri: `${this.url}/${api}`,
-    formData: {
-        name: skin.name,
-        projectId: skin.projectId,
-        userId: skin.userId,
-        headerColor: skin.headerColor,
-        logoMode: skin.logoMode,
-        skinColorPrimary: skin.skinColorPrimary,
-        skinColorSecondary: skin.skinColorSecondary,
-        textColorPrimary: skin.textColorPrimary,
-        textColorSecondary: skin.textColorSecondary,
-        favicon: skin.favicon,
-        logo: skin.logo
-    },
-    json: true,
-    headers: {
-      'Authorization': 'Bearer ' + this.token,
-      'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
+  constructor(url, token, skin){
+    this.url = url;
+    this.token = token;
+    if(typeof skin !== 'undefined'){
+      this.data = skin;
     }
-  };
+  }
 
-  return rp(options)
-    .then(function (body) {
-        return body;
-    })
-    .catch(function (err) {
-        return {
-          statusCode: err.statusCode,
-          errors: err.error.errors
-        };
+  getSkins(query){
+    var queryString = queryFn.setQueryString(query);
+    const skins = axios.get(`${this.url}/${api}?${queryString}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
     });
-};
 
-var deleteSkin = (idSkin) => {
-  const del = axios.delete(`${this.url}/${api}/${idSkin}`,{
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
+    return skins.then((result) => {
+      var Skins = new Array();
+      result.data.forEach(skin => {
+        Skins.push(new Skin(this.url, this.token, skin));
+      });
+      return Skins;
+    })
+    .catch(error => {
+      return error.code;
+    });
+  }
 
-  return del.then(result => {
-    return result.status;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
+  getSkin(idSkin, query){
+    var queryString = queryFn.setQueryString(query);
+    const skin = axios.get(`${this.url}/${api}/${idSkin}?${queryString}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return skin.then((result) => {
+      return new Skin(this.url, this.token, result.data);
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  createSkin(skin){
+    var options = {
+      method: 'POST',
+      uri: `${this.url}/${api}`,
+      formData: {
+          name: skin.name,
+          projectId: skin.projectId,
+          userId: skin.userId,
+          headerColor: skin.headerColor,
+          logoMode: skin.logoMode,
+          skinColorPrimary: skin.skinColorPrimary,
+          skinColorSecondary: skin.skinColorSecondary,
+          textColorPrimary: skin.textColorPrimary,
+          textColorSecondary: skin.textColorSecondary,
+          favicon: skin.favicon,
+          logo: skin.logo
+      },
+      json: true,
+      headers: {
+        'Authorization': 'Bearer ' + this.token,
+        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
+      }
     };
-  });
-};
+    var inThis = this;
+    return rp(options)
+      .then(function (body) {
+          return new Skin(inThis.url, inThis.token, body);
+      })
+      .catch(function (err) {
+          return {
+            statusCode: err.statusCode,
+            errors: err.error.errors
+          };
+      });
+  }
 
-var updateSkin = (idSkin, skin) => {
-  const update = axios.patch(`${this.url}/${api}/${idSkin}`, skin, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
+  deleteSkin(idSkin){
+    if(typeof idSkin === 'undefined'){
+        idSkin = this.data.id;
+    }
 
-  return update.then(result => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
+    const del = axios.delete(`${this.url}/${api}/${idSkin}`,{
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
 
-var replaceSkin = (idSkin, skin) => {
-  const update = axios.put(`${this.url}/${api}/${idSkin}`, skin, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
+    return del.then(result => {
+      return result.status;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
 
-  return update.then(result => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
+  updateSkin(skin, idSkin){
+    if(typeof idSkin === 'undefined'){
+        idSkin = this.data.id;
+    }
+    const update = axios.patch(`${this.url}/${api}/${idSkin}`, skin, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
 
-module.exports ={
-  getSkins,
-  createSkin,
-  setUrl,
-  getSkin,
-  deleteSkin,
-  updateSkin,
-  replaceSkin,
-  setAuthToken
+    return update.then(result => {
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  replaceSkin(skin, idSkin){
+    if(typeof idSkin === 'undefined'){
+        idSkin = this.data.id;
+    }
+    const update = axios.put(`${this.url}/${api}/${idSkin}`, skin, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
+
+    return update.then(result => {
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  };
 }
 
+// module.exports ={
+//   getSkins,
+//   createSkin,
+//   setUrl,
+//   getSkin,
+//   deleteSkin,
+//   updateSkin,
+//   replaceSkin,
+//   setAuthToken
+// }
 
 // var createSkin = (token, url, skin) => {
 //

@@ -1,33 +1,42 @@
 const axios = require('axios');
 const api = 'v1/users';
+const queryFn = require('./fn/QueryString');
 
 module.exports=
 class User {
-
   constructor(url, token, user){
     this.url = url;
     this.token = token;
     if(typeof user !== 'undefined'){
-      this.user = user;
+      this.data = user;
     }
   }
 
-  getUsers() {
-    const users = axios.get(`${this.url}/${api}`, {
+  getUsers(query) {
+    var queryString = queryFn.setQueryString(query);
+    const users = axios.get(`${this.url}/${api}?${queryString}`, {
       headers: {'Authorization': 'Bearer ' + this.token}
     });
 
     return users.then((result) => {
-      return result.data;
+      var Users = new Array();
+      result.data.forEach(user => {
+        Users.push(new User(this.url, this.token, user));
+      });
+      return Users;
     })
     .catch(error => {
-      return error.code;
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
     });
   }
 
 
-  getUser (userId) {
-    const user = axios.get(`${this.url}/${api}/${userId}`, {
+  getUser (userId, query) {
+    var queryString = queryFn.setQueryString(query);
+    const user = axios.get(`${this.url}/${api}/${userId}?${queryString}`, {
       headers: {'Authorization': 'Bearer ' + this.token}
     });
 
@@ -47,7 +56,8 @@ class User {
     });
 
     return add.then(result =>{
-      return result.data;
+      // return result.data;
+      return new User(this.url, this.token, result.data);
     })
     .catch(error => {
       return {
@@ -59,9 +69,8 @@ class User {
 
   deleteUser (userId) {
     if(typeof userId === 'undefined'){
-        userId = this.user.id;
+        userId = this.data.id;
     }
-    console.log(userId);
     const del = axios.delete(`${this.url}/${api}/${userId}`,{
       headers: {'Authorization': 'Bearer ' + this.token}
     });
@@ -77,13 +86,17 @@ class User {
     });
   }
 
-  replaceUser (userId, user) {
+  replaceUser (user, userId) {
+    if(typeof userId === 'undefined'){
+        userId = this.data.id;
+    }
     const replace = axios.put(`${this.url}/${api}/${userId}`, user,{
       headers: {'Authorization': 'Bearer ' + this.token}
     });
 
     return replace.then(result =>{
-      return result.data;
+      this.data = result.data;
+      return this;
     })
     .catch(error => {
       return {

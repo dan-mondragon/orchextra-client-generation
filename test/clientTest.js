@@ -1,18 +1,20 @@
-const clientApi = require('../src/clients');
-var Auth = require('orchextra-client')
-var auth = new Auth('https://auth-api-coupons.s.gigigoapps.com')
+const idClient = '594bf6cd3157b629aab3eb65';
 
-const idUser = '594af3153157b629aab3eb55';
+var Client = require('../src/clients');
+var client = new Client('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI');
 
-clientApi.setAuthToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI');
-clientApi.setUrl('https://generation-api-coupons.s.gigigoapps.com');
-
-var _with = {
-  customers: [],
-  user: ['clients']
+var query = {
+    _with: ['user.clients', 'user.projects'],
+    fields: ['type'],
+    filter: []
 };
 
-var fields = [];
+var clientModel = {
+  type: 'generation',
+  name: 'nameTest3.5',
+  clientSecret: 'secretTest3.5',
+  clientId: 'clientIdNew3'
+};
 
 // auth.authClient('qwerty', 'qwerty')
 //   .then(client => {
@@ -24,41 +26,49 @@ var fields = [];
 //     });
 //   })
 
-clientApi.getClients(_with, fields).then(clients => {
-  clients.forEach((client) => console.log(client));
+// client.getClients(query).then(clients => {
+//   clients.forEach((client) => console.log(client.data));
+// })
+// .catch(error => {
+//   console.log(error);
+// });
+
+client.getClient(idClient, query).then(clientReturned => {
+  console.log(clientReturned.data);
+  // clientReturned.deleteClient().then(client => {
+  //   console.log(client);
+  // })
+  // .catch(error => {
+  //   console.log(error);
+  // });
+
+  clientReturned.replaceClient(clientModel).then(client => {
+    console.log(client);
+  }).catch(error => {
+    console.log(error);
+  });
 })
 .catch(error => {
   console.log(error);
 });
 
-  // clientApi.getClient(idUser).then(client => {
-  //   console.log(client);
-  // })
-  // .catch(error => {
-  //   console.log(error);
-  // });
-  var client = {
-    type: 'generation',
-    name: 'nameTest3.3',
-    clientSecret: 'secretTest3',
-  };
 
-  // clientApi.createClient(client).then(client => {
-  //   console.log(client);
-  // }).catch(error => {
-  //   console.log(error);
-  // });
+// client.createClient(clientModel).then(client => {
+//   console.log(client.data);
+// }).catch(error => {
+//   console.log(error);
+// });
 
 
-  // clientApi.deleteClient(idUser).then(client => {
-  //   console.log(client);
-  // })
-  // .catch(error => {
-  //   console.log(error);
-  // });
+// client.deleteClient(idClient).then(client => {
+//   console.log(client);
+// })
+// .catch(error => {
+//   console.log(error);
+// });
 
-  // clientApi.replaceClient(idUser, client).then(client => {
-  //   console.log(client);
-  // }).catch(error => {
-  //   console.log(error);
-  // });
+// client.replaceClient(clientModel, idClient).then(client => {
+//   console.log(client);
+// }).catch(error => {
+//   console.log(error);
+// });

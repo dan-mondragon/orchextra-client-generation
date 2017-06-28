@@ -15,16 +15,12 @@
 var User = require('../src/users');
 var user = new User('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI');
 
-var Auth = require('orchextra-client')
-var auth = new Auth('https://auth-api-coupons.s.gigigoapps.com')
-
-
-const idUser = '594ae5eb3157b629aab3eb41';
+const idUser = '592ee7d0b46c2cbdc2ace58c';
 
 var userModel = {
-  name: 'User Test 4',
-  email: 'test@gigigo.com.mx',
-  username: 'test',
+  name: 'Ricardo 4',
+  email: 'test_test4@gigigo.com.mx',
+  username: 'Ricardo 4',
   role: 'Role',
   password: 'gigigo',
   passwordConfirmation: 'gigigo',
@@ -32,21 +28,39 @@ var userModel = {
   projectsIds: ["5936cb98d318c404f94951e2"]
 };
 
-user.getUsers().then(users => {
-  users.forEach((user) => console.log(user.id));
+var query = {
+    _with: [],
+    fields: ['role','name'],
+    filter: ['name=Nehomar Correa']
+};
+
+user.getUsers(query).then(users => {
+  // console.log(users);
+  users.forEach((user) => console.log(user.data));
+  // users[4].deleteUser().then(user => {
+  //     console.log(user);
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
 })
 .catch(error => {
   console.log(error);
 });
 
-// user.getUser(idUser).then(userReturn => {
-//   userReturn.deleteUser().then(user => {
-//     console.log(user);
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   });
-//
+// user.getUser(idUser).then(returnedUser => {
+//   console.log(returnedUser);
+//   // returnedUser.replaceUser(userModel).then(user => {
+//   //   console.log(user);
+//   // }).catch(error => {
+//   //   console.log(error);
+//   // });
+//   // returnedUser.deleteUser().then(user => {
+//   //   console.log(user);
+//   // })
+//   // .catch(error => {
+//   //   console.log(error);
+//   // });
 // })
 // .catch(error => {
 //   console.log(error);
@@ -65,7 +79,7 @@ user.getUsers().then(users => {
 //   console.log(error);
 // });
 
-// user.replaceUser(idUser, userModel).then(user => {
+// user.replaceUser(userModel,idUser).then(user => {
 //   console.log(user);
 // }).catch(error => {
 //   console.log(error);

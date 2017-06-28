@@ -1,57 +1,59 @@
 const axios = require('axios');
 const api = 'v1/coupons';
-const couponsUtils = require('./fn/coupons');
+const queryFn = require('./fn/QueryString');
 
-var setUrl = (url) => {
-  this.url = url;
-};
+module.exports=
+class Coupon {
+  constructor(url, token, coupon){
+    this.url = url;
+    this.token = token;
+    if(typeof coupon !== 'undefined'){
+      this.data = coupon;
+    }
+  }
 
-var setAuthToken = (token) => {
-  this.token = token;
+  getCoupons(query){
+    var queryString = queryFn.setQueryString(query);
+    const coupons = axios.get(`${this.url}/${api}?${queryString}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return coupons.then((result) => {
+      var Coupons = new Array();
+      result.data.forEach(coupon => {
+        Coupons.push(new Coupon(this.url, this.token, coupon));
+      });
+      return Coupons;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  getCoupon(idCustomer, query){
+    var queryString = queryFn.setQueryString(query);
+    const coupon = axios.get(`${this.url}/${api}/${idCustomer}?${queryString}}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return coupon.then((result) => {
+      return new Coupon(this.url, this.token, result.data);
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
 }
 
-var getCoupons = (w, fields)  => {
-  var withString = couponsUtils.setWith(w);
-  var fieldsString = couponsUtils.setFields(fields);
-
-  const coupons = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return coupons.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var getCoupon = (idCustomer, w, fields) => {
-  var withString = couponsUtils.setWith(w);
-  var fieldsString = couponsUtils.setFields(fields);
-
-  const coupon = axios.get(`${this.url}/${api}/${idCustomer}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return coupon.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-
-module.exports = {
-  getCoupons,
-  getCoupon,
-  setUrl,
-  setAuthToken
-};
+// module.exports = {
+//   getCoupons,
+//   getCoupon,
+//   setUrl,
+//   setAuthToken
+// };

@@ -1,125 +1,140 @@
 const axios = require('axios');
 const api = 'v1/projects';
-const projectUtils = require('./fn/projects');
+const queryFn = require('./fn/QueryString');
 
-var setUrl = (url) => {
-  this.url = url;
-};
+module.exports=
+class Project {
+  constructor(url, token, project){
+    this.url = url;
+    this.token = token;
+    if(typeof project !== 'undefined'){
+      this.data = project;
+    }
+  }
 
-var setAuthToken = (token) => {
-  this.token = token;
+  getProjects(query){
+    var queryString = queryFn.setQueryString(query);
+    const projects = axios.get(`${this.url}/${api}?${queryString}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return projects.then((result) => {
+      var Projects = new Array();
+      result.data.forEach(project => {
+        Projects.push(new Project(this.url, this.token, project));
+      });
+      return Projects;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  getProject(idProject, query){
+    var queryString = queryFn.setQueryString(query);
+    const project = axios.get(`${this.url}/${api}/${idProject}?${queryString}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return project.then((result) => {
+      return new Project(this.url, this.token, result.data);
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  createProject(project){
+    const add = axios.post(`${this.url}/${api}`, project, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
+
+    return add.then(result =>{
+      return new Project(this.url, this.token, result.data);
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  deleteProject(idProject){
+    if(typeof idProject === 'undefined'){
+        idProject = this.data.id;
+    }
+    const project = axios.delete(`${this.url}/${api}/${idProject}`, {
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return project.then(result => {
+      return result.status;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  updateProject(project, idProject){
+    if(typeof idProject === 'undefined'){
+        idProject = this.data.id;
+    }
+    const update = axios.patch(`${this.url}/${api}/${idProject}`, project, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
+
+    return update.then(result => {
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
+  replaceProject(project, idProject){
+    if(typeof idProject === 'undefined'){
+        idProject = this.data.id;
+    }
+    const update = axios.put(`${this.url}/${api}/${idProject}`, project, {
+      headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
+    });
+
+    return update.then(result => {
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
 }
 
-var getProjects = (w, fields)  => {
-  var withString = projectUtils.setWith(w);
-  var fieldsString = projectUtils.setFields(fields);
-
-  const projects = axios.get(`${this.url}/${api}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return projects.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var getProject = (idProject, w, fields)  => {
-  var withString = projectUtils.setWith(w);
-  var fieldsString = projectUtils.setFields(fields);
-  const project = axios.get(`${this.url}/${api}/${idProject}?with=${withString}&fields=${fieldsString}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return project.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var createProject = (project) => {
-  const add = axios.post(`${this.url}/${api}`, project, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
-
-  return add.then(result =>{
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var deleteProject = (idProject)  => {
-  const project = axios.delete(`${this.url}/${api}/${idProject}`, {
-    headers: {'Authorization': 'Bearer ' + this.token}
-  });
-
-  return project.then((result) => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var updateProject = (projectlId, project) => {
-  const update = axios.patch(`${this.url}/${api}/${projectlId}`, project, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
-
-  return update.then(result => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
-
-var replaceProject = (projectlId, project) => {
-  const update = axios.put(`${this.url}/${api}/${projectlId}`, project, {
-    headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
-  });
-
-  return update.then(result => {
-    return result.data;
-  })
-  .catch(error => {
-    return {
-      statusCode: error.response.status,
-      errors: error.response.data
-    };
-  });
-};
 
 
-
-module.exports = {
-  getProjects,
-  getProject,
-  createProject,
-  deleteProject,
-  updateProject,
-  replaceProject,
-  setUrl,
-  setAuthToken
-};
+// module.exports = {
+//   getProjects,
+//   getProject,
+//   createProject,
+//   deleteProject,
+//   updateProject,
+//   replaceProject,
+//   setUrl,
+//   setAuthToken
+// };
