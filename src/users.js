@@ -110,6 +110,9 @@ class User {
     if(typeof userId === 'undefined'){
         userId = this.data.id;
     }
+    if(typeof user === 'undefined'){
+        user = this.data;
+    }
     const update = axios.patch(`${this.url}/${api}/${userId}`, user,{
       headers: {'Authorization': 'Bearer ' + this.token}
     });

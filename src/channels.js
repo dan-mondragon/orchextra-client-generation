@@ -90,6 +90,9 @@ class Channel {
     if(typeof channelId === 'undefined'){
         channelId = this.data.id;
     }
+    if(typeof channel === 'undefined'){
+        channel = this.data;
+    }
     const update = axios.patch(`${this.url}/${api}/${channelId}`, channel, {
       headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
     });

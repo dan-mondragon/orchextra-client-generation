@@ -89,6 +89,9 @@ class Project {
     if(typeof idProject === 'undefined'){
         idProject = this.data.id;
     }
+    if(typeof project === 'undefined'){
+        project = this.data;
+    }
     const update = axios.patch(`${this.url}/${api}/${idProject}`, project, {
       headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
     });

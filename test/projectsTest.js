@@ -12,9 +12,9 @@ var query = {
 };
 
 var projectModel = {
-  name: 'Test Project Description 1.2',
+  name: 'Test Project name 2',
   description: 'Test Project description 2.2',
-  url: 'http://www.url3.com'
+  domains: [{url: 'http://www.url3.com'}]
 };
 
 // project.getProjects(query).then(projects => {
@@ -24,29 +24,29 @@ var projectModel = {
 //   console.log(error);
 // });
 
-project.getProject(idProject).then(projectReturned => {
-  console.log(project);
-  // projectReturned.deleteProject().then(project => {
-  //   console.log(project);
-  // }).catch(error => {
-  //   console.log(error);
-  // });
-
-  projectReturned.replaceProject(projectModel).then(project => {
-    console.log(project);
-  }).catch(error => {
-    console.log(error);
-  });
-})
-.catch(error => {
-  console.log(error);
-});
-
-// project.createProject(projectModel).then(project => {
+// project.getProject(idProject).then(projectReturned => {
 //   console.log(project);
-// }).catch(error => {
+//   // projectReturned.deleteProject().then(project => {
+//   //   console.log(project);
+//   // }).catch(error => {
+//   //   console.log(error);
+//   // });
+//
+//   projectReturned.replaceProject(projectModel).then(project => {
+//     console.log(project);
+//   }).catch(error => {
+//     console.log(error);
+//   });
+// })
+// .catch(error => {
 //   console.log(error);
 // });
+
+project.createProject(projectModel).then(project => {
+  console.log(project);
+}).catch(error => {
+  console.log(error);
+});
 
 // project.deleteProject(idProject).then(project => {
 //   console.log(project);

@@ -110,6 +110,11 @@ class Campaign {
     if(typeof campaignId === 'undefined'){
         campaignId = this.data.id;
     }
+    if(typeof campaign === 'undefined'){
+        campaign = this.data;
+    }
+    console.log(campaignId);
+    console.log(campaign);
     const update = axios.patch(`${this.url}/${api}/${campaignId}`, campaign, {
       headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
     });

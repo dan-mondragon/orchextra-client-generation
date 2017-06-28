@@ -119,6 +119,36 @@ class Client {
       };
     });
   }
+
+  updateClient(client, clientId){
+    if(typeof clientId === 'undefined'){
+        clientId = this.data.id;
+    }
+    if(typeof client === 'undefined'){
+        client = this.data;
+    }
+    const update = axios.patch(`${this.url}/${api}/${clientId}`, {
+      type: client.type,
+      name: client.name,
+      clientId: client.clientId,
+      clientSecret: client.clientSecret,
+      userId: client.userId
+    },{
+      headers: {'Authorization': 'Bearer ' + this.token}
+    });
+
+    return update.then(result =>{
+      this.data = result.data;
+      return this;
+    })
+    .catch(error => {
+      return {
+        statusCode: error.response.status,
+        errors: error.response.data
+      };
+    });
+  }
+
 }
 
 // module.exports = {

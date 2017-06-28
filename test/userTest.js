@@ -15,17 +15,17 @@
 var User = require('../src/users');
 var user = new User('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI');
 
-const idUser = '59514fc83157b629aab3eb84';
+const idUser = '5954141af3eae769b1d693c2';
 
 var userModel = {
-  name: 'Ricardo 4',
-  email: 'test_test4@gigigo.com.mx',
-  username: 'Ricardo 4',
-  role: 'Role',
+  name: 'Ricardo 7',
+  email: 'test_test5@gigigo.com.mx',
+  username: 'Ricardo 7',
+  roles: ['Role'],
   password: 'gigigo',
   passwordConfirmation: 'gigigo',
   languageCode: 'es',
-  projectsIds: ["5936cb98d318c404f94951e2"]
+  projectsIds: ["59541372f3eae769b1d693c0"]
 };
 
 var query = {
@@ -34,19 +34,19 @@ var query = {
     filter: ['name=Nehomar Correa']
 };
 
-user.getUsers(query).then(users => {
-  // console.log(users);
-  users.forEach((user) => console.log(user.data));
-  // users[4].deleteUser().then(user => {
-  //     console.log(user);
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-})
-.catch(error => {
-  console.log(error);
-});
+// user.getUsers(query).then(users => {
+//   // console.log(users);
+//   users.forEach((user) => console.log(user.data));
+//   // users[4].deleteUser().then(user => {
+//   //     console.log(user);
+//   //   })
+//   //   .catch(error => {
+//   //     console.log(error);
+//   //   });
+// })
+// .catch(error => {
+//   console.log(error);
+// });
 
 user.getUser(idUser).then(returnedUser => {
   console.log(returnedUser);
@@ -61,32 +61,40 @@ user.getUser(idUser).then(returnedUser => {
   // .catch(error => {
   //   console.log(error);
   // });
+
+  returnedUser.data.name = 'Ricardo 7';
+  returnedUser.data.username = 'Ricardo 7';
+  returnedUser.updateUser().then(user => {
+    console.log(user);
+  }).catch(error => {
+    console.log(error);
+  });
 })
 .catch(error => {
   console.log(error);
 });
 
-user.createUser(userModel).then(user => {
-  console.log(user);
-}).catch(error => {
-  console.log(error);
-});
+// user.createUser(userModel).then(user => {
+//   console.log(user);
+// }).catch(error => {
+//   console.log(error);
+// });
 
-user.deleteUser(idUser).then(user => {
-  console.log(user);
-})
-.catch(error => {
-  console.log(error);
-});
+// user.deleteUser(idUser).then(user => {
+//   console.log(user);
+// })
+// .catch(error => {
+//   console.log(error);
+// });
 
-user.replaceUser(userModel,idUser).then(user => {
-  console.log(user);
-}).catch(error => {
-  console.log(error);
-});
+// user.replaceUser(userModel,idUser).then(user => {
+//   console.log(user);
+// }).catch(error => {
+//   console.log(error);
+// });
 
-user.updateUser(userModel,idUser).then(user => {
-  console.log(user);
-}).catch(error => {
-  console.log(error);
-});
+// user.updateUser(userModel,idUser).then(user => {
+//   console.log(user);
+// }).catch(error => {
+//   console.log(error);
+// });
