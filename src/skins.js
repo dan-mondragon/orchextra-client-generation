@@ -7,11 +7,14 @@ const queryFn = require('./fn/QueryString');
 module.exports=
 class Skin {
 
-  constructor(url, token, skin){
+  constructor(url, token, skin, count){
     this.url = url;
     this.token = token;
     if(typeof skin !== 'undefined'){
       this.data = skin;
+    }
+    if(typeof count !== 'undefined'){
+      this.total_count = count;
     }
   }
 
@@ -24,12 +27,15 @@ class Skin {
     return skins.then((result) => {
       var Skins = new Array();
       result.data.forEach(skin => {
-        Skins.push(new Skin(this.url, this.token, skin));
+        Skins.push(new Skin(this.url, this.token, skin, result.headers['x-total-count']));
       });
       return Skins;
     })
     .catch(error => {
-      return error.code;
+      return Promise.reject({
+        statusCode: error.response.status,
+        errors: error.response.data
+      });
     });
   }
 
@@ -43,14 +49,17 @@ class Skin {
       return new Skin(this.url, this.token, result.data);
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   createSkin(skin){
+    if(typeof skin === 'undefined'){
+        skin = this.data;
+    }
     var options = {
       method: 'POST',
       uri: `${this.url}/${api}`,
@@ -79,16 +88,18 @@ class Skin {
           return new Skin(inThis.url, inThis.token, body);
       })
       .catch(function (err) {
-          return {
-            statusCode: err.statusCode,
-            errors: err.error.errors
-          };
+          return Promise.reject({
+            statusCode: error.response.status,
+            errors: error.response.data
+          });
       });
   }
 
   deleteSkin(idSkin){
     if(typeof idSkin === 'undefined'){
-        idSkin = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          idSkin = this.data.id;
+      }
     }
 
     const del = axios.delete(`${this.url}/${api}/${idSkin}`,{
@@ -99,16 +110,21 @@ class Skin {
       return result.status;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   updateSkin(skin, idSkin){
     if(typeof idSkin === 'undefined'){
-        idSkin = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          idSkin = this.data.id;
+      }
+    }
+    if(typeof skin === 'undefined'){
+        skin = this.data;
     }
     const update = axios.patch(`${this.url}/${api}/${idSkin}`, skin, {
       headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
@@ -119,16 +135,21 @@ class Skin {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   replaceSkin(skin, idSkin){
     if(typeof idSkin === 'undefined'){
-        idSkin = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          idSkin = this.data.id;
+      }
+    }
+    if(typeof skin === 'undefined'){
+        skin = this.data;
     }
     const update = axios.put(`${this.url}/${api}/${idSkin}`, skin, {
       headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
@@ -139,10 +160,10 @@ class Skin {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   };
 }

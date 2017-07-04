@@ -4,11 +4,14 @@ const queryFn = require('./fn/QueryString');
 
 module.exports=
 class Channel {
-  constructor(url, token, channel){
+  constructor(url, token, channel, count){
     this.url = url;
     this.token = token;
     if(typeof channel !== 'undefined'){
       this.data = channel;
+    }
+    if(typeof count !== 'undefined'){
+      this.total_count = count;
     }
   }
 
@@ -21,15 +24,15 @@ class Channel {
     return channels.then((result) => {
       var Channels = new Array();
       result.data.forEach(channel => {
-        Channels.push(new Channel(this.url, this.token, channel));
+        Channels.push(new Channel(this.url, this.token, channel, result.headers['x-total-count']));
       });
       return Channels;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
@@ -43,15 +46,18 @@ class Channel {
       return new Channel(this.url, this.token, result.data);
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
 
   createChannel(channel){
+    if(typeof channel === 'undefined'){
+        channel = this.data;
+    }
     const add = axios.post(`${this.url}/${api}`, channel, {
       headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
     });
@@ -60,16 +66,18 @@ class Channel {
       return new Channel(this.url, this.token, result.data);
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   deleteChannel(channelId){
     if(typeof channelId === 'undefined'){
-        channelId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          channelId = this.data.id;
+      }
     }
     const del = axios.delete(`${this.url}/${api}/${channelId}`,{
       headers: {'Authorization': 'Bearer ' + this.token}
@@ -79,16 +87,18 @@ class Channel {
       return result.status;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   updateChannel(channel, channelId){
     if(typeof channelId === 'undefined'){
-        channelId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          channelId = this.data.id;
+      }
     }
     if(typeof channel === 'undefined'){
         channel = this.data;
@@ -102,16 +112,21 @@ class Channel {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   replaceChannel(channel, channelId){
     if(typeof channelId === 'undefined'){
-        channelId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          channelId = this.data.id;
+      }
+    }
+    if(typeof channel === 'undefined'){
+        channel = this.data;
     }
     const update = axios.put(`${this.url}/${api}/${channelId}`, channel, {
       headers: {'Authorization': 'Bearer ' + this.token,'Content-Type': 'application/json'}
@@ -122,10 +137,10 @@ class Channel {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 }

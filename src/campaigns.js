@@ -3,13 +3,17 @@ const api = 'v1/campaigns';
 var rp = require('request-promise');
 const queryFn = require('./fn/QueryString');
 
+
 module.exports=
 class Campaign {
-  constructor(url, token, campaign){
+  constructor(url, token, campaign, count){
     this.url = url;
     this.token = token;
     if(typeof campaign !== 'undefined'){
       this.data = campaign;
+    }
+    if(typeof count !== 'undefined'){
+      this.total_count = count;
     }
   }
 
@@ -22,12 +26,15 @@ class Campaign {
     return campaigns.then((result) => {
       var Campaigns = new Array();
       result.data.forEach(campaign => {
-        Campaigns.push(new Campaign(this.url, this.token, campaign));
+        Campaigns.push(new Campaign(this.url, this.token, campaign, result.headers['x-total-count']));
       });
       return Campaigns;
     })
     .catch(error => {
-      return error.code;
+      return Promise.reject({
+        statusCode: error.response.status,
+        errors: error.response.data
+      });
     });
   }
 
@@ -41,15 +48,18 @@ class Campaign {
       return new Campaign(this.url, this.token, result.data);
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
 
   createCampaign(campaign){
+    if(typeof campaign === 'undefined'){
+        campaign = this.data;
+    }
     var options = {
       method: 'POST',
       uri: `${this.url}/${api}`,
@@ -77,18 +87,19 @@ class Campaign {
           return new Campaign(inThis.url, inThis.token, body);
       })
       .catch(function (err) {
-        console.log(err);
-          return {
-            statusCode: err.statusCode,
-            errors: err.error.errors
-          };
+          return Promise.reject({
+            statusCode: error.response.status,
+            errors: error.response.data
+          });
       });
   }
 
 
   deleteCampaign(idCampaign){
     if(typeof idCampaign === 'undefined'){
-        idCampaign = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          idCampaign = this.data.id;
+      }
     }
     const del = axios.delete(`${this.url}/${api}/${idCampaign}`,{
       headers: {'Authorization': 'Bearer ' + this.token}
@@ -98,17 +109,19 @@ class Campaign {
       return result.status;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
 
   updateCampaign(campaign, campaignId){
     if(typeof campaignId === 'undefined'){
-        campaignId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          campaignId = this.data.id;
+      }
     }
     if(typeof campaign === 'undefined'){
         campaign = this.data;
@@ -124,16 +137,21 @@ class Campaign {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   replaceCampaign(campaign, campaignId){
     if(typeof campaignId === 'undefined'){
-        campaignId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          campaignId = this.data.id;
+      }
+    }
+    if(typeof campaign === 'undefined'){
+        campaign = this.data;
     }
     // console.log(campaign);
     // console.log(campaignId);
@@ -145,10 +163,10 @@ class Campaign {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 }

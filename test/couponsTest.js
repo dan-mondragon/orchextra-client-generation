@@ -10,17 +10,24 @@ const idCoupon = '';
 const fs = require('fs');
 
 var Coupon = require('../src/coupons');
-var coupon = new Coupon('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI');
+var coupon = new Coupon('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5NTQzNWRlZjNlYWU3NjliMWQ2OTNjZSIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0yOVQxNDoyNzoxMy42NzVaIiwiaWF0IjoxNDk4NzQ2NDMzfQ.FKLIBDx5REmnplIvFD5AfsB9ofXrdidP9ApSkqhMBXo');
 
 var query = {
     _with: [],
     fields: [],
-    filter: []
+    filter: {},
+    page: 1,
+    perPage: 2
 };
 
 
 coupon.getCoupons(query).then(coupons => {
-  coupons.forEach((coupon) => console.log(coupon));  
+  if(coupons instanceof Coupon){
+    coupons.forEach((coupon) => console.log(coupon));
+  }
+  else{
+    console.log(coupons);
+  }
 })
 .catch(error => {
   console.log(error);

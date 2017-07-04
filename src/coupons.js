@@ -4,11 +4,14 @@ const queryFn = require('./fn/QueryString');
 
 module.exports=
 class Coupon {
-  constructor(url, token, coupon){
+  constructor(url, token, coupon, count){
     this.url = url;
     this.token = token;
     if(typeof coupon !== 'undefined'){
       this.data = coupon;
+    }
+    if(typeof count !== 'undefined'){
+      this.total_count = count;
     }
   }
 
@@ -21,15 +24,15 @@ class Coupon {
     return coupons.then((result) => {
       var Coupons = new Array();
       result.data.forEach(coupon => {
-        Coupons.push(new Coupon(this.url, this.token, coupon));
+        Coupons.push(new Coupon(this.url, this.token, coupon, campaign, result.headers['x-total-count']));
       });
       return Coupons;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
@@ -43,10 +46,10 @@ class Coupon {
       return new Coupon(this.url, this.token, result.data);
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 }

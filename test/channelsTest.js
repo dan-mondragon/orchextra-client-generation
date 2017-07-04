@@ -3,12 +3,16 @@ const idCampaign = '5941b6323157b629aab3eabb';
 const idChannel = '594aee6d3157b629aab3eb4c';
 
 var Channel = require('../src/channels');
-var channel = new Channel('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5MmVlODQxYjQ2YzJjYmRjMmFjZTU4ZCIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0xNFQyMToxNzowMS44NDdaIiwiaWF0IjoxNDk3NDc1MDIxfQ.VVUEnTb0s0cw-X4hTmOj4t822LkyGnlhAeOUKUBEikI');
+var channel = new Channel('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5NTQzNWRlZjNlYWU3NjliMWQ2OTNjZSIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0yOVQxNDoyNzoxMy42NzVaIiwiaWF0IjoxNDk4NzQ2NDMzfQ.FKLIBDx5REmnplIvFD5AfsB9ofXrdidP9ApSkqhMBXo');
 
 var query = {
     _with: ['client.user', 'client.customers'],
     fields: ['stock'],
-    filter: []
+    filter: {
+      stock: 100
+    },
+    page: 1,
+    perPage: 2
 };
 
 var channelModel = {
@@ -21,26 +25,31 @@ var channelModel = {
   skinId: '59480e333157b629aab3eaeb'
 };
 
-// channel.getChannels(query).then(channels => {
-//   channels.forEach((channel) => console.log(channel));
-// })
-// .catch(error => {
-//   console.log(error);
-// });
-
-channel.getChannel(idChannel, query).then(channelReturned => {
-  console.log(channel);
-
-  channelReturned.deleteChannel().then(channel => {
-    console.log(channel);
-  })
-  .catch(error => {
-    console.log(error);
-  });
+channel.getChannels(query).then(channels => {
+  // if(channels instanceof Channel){
+    channels.forEach((channel) => console.log(channel));
+  // }
+  // else{
+  //   console.log(channels);
+  // }
 })
 .catch(error => {
   console.log(error);
 });
+
+// channel.getChannel(idChannel, query).then(channelReturned => {
+//   console.log(channel);
+//
+//   channelReturned.deleteChannel().then(channel => {
+//     console.log(channel);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
+// })
+// .catch(error => {
+//   console.log(error);
+// });
 
 // channel.createChannel(channelModel).then(channel => {
 //   console.log(channel);

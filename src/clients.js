@@ -4,11 +4,14 @@ const queryFn = require('./fn/QueryString');
 
 module.exports=
 class Client {
-  constructor(url, token, client){
+  constructor(url, token, client, count){
     this.url = url;
     this.token = token;
     if(typeof client !== 'undefined'){
       this.data = client;
+    }
+    if(typeof count !== 'undefined'){
+      this.total_count = count;
     }
   }
 
@@ -21,15 +24,15 @@ class Client {
     return clients.then((result) => {
       var Clients = new Array();
       result.data.forEach(client => {
-        Clients.push(new Client(this.url, this.token, client));
+        Clients.push(new Client(this.url, this.token, client, result.headers['x-total-count']));
       });
       return Clients;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
@@ -43,15 +46,18 @@ class Client {
       return new Client(this.url, this.token, result.data);
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     })
   }
 
 
   createClient(client){
+    if(typeof client === 'undefined'){
+        client = this.data;
+    }
     const add = axios.post(`${this.url}/${api}`, {
       type: client.type,
       name: client.name,
@@ -66,17 +72,19 @@ class Client {
       return new Client(this.url, this.token, result.data);
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
 
   deleteClient(clientId){
     if(typeof clientId === 'undefined'){
-        clientId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          clientId = this.data.id;
+      }
     }
     const del = axios.delete(`${this.url}/${api}/${clientId}`,{
       headers: {'Authorization': 'Bearer ' + this.token}
@@ -86,17 +94,22 @@ class Client {
       return result.status;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
 
   replaceClient(client, clientId){
     if(typeof clientId === 'undefined'){
-        clientId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          clientId = this.data.id;
+      }
+    }
+    if(typeof client === 'undefined'){
+        client = this.data;
     }
     const replace = axios.put(`${this.url}/${api}/${clientId}`, {
       type: client.type,
@@ -113,16 +126,18 @@ class Client {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
   updateClient(client, clientId){
     if(typeof clientId === 'undefined'){
-        clientId = this.data.id;
+      if(typeof this.data !== 'undefined'){
+          clientId = this.data.id;
+      }
     }
     if(typeof client === 'undefined'){
         client = this.data;
@@ -142,10 +157,10 @@ class Client {
       return this;
     })
     .catch(error => {
-      return {
+      return Promise.reject({
         statusCode: error.response.status,
         errors: error.response.data
-      };
+      });
     });
   }
 
