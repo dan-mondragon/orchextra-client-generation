@@ -1,5 +1,3 @@
-const axios = require('axios');
-const queryFn = require('./fn/QueryString');
 
 var Base = require('./BaseCRUD');
 
