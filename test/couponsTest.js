@@ -21,7 +21,7 @@ var query = {
 };
 
 
-coupon.get(query).then(coupons => {
+coupon.all(query).then(coupons => {
   if(coupons instanceof Coupon){
     coupons.forEach((coupon) => console.log(coupon));
   }

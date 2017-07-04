@@ -15,7 +15,7 @@
 var User = require('../src/users');
 var user = new User('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5NTQzNWRlZjNlYWU3NjliMWQ2OTNjZSIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0yOVQxNDoyNzoxMy42NzVaIiwiaWF0IjoxNDk4NzQ2NDMzfQ.FKLIBDx5REmnplIvFD5AfsB9ofXrdidP9ApSkqhMBXo');
 
-const id = '595abefdf3eae769b1d69401';
+const id = '595a7322f3eae769b1d693fb';
 
 var userModel = {
   name: 'Test 11',
@@ -42,7 +42,7 @@ var query = {
 
 user.all(query).then(users => {
     users.forEach((user) => console.log(user.data));
-  // users[4].deleteUser().then(user => {
+  // users[4].deleteUser().then(user =>s {
   //     console.log(user);
   //   })
   //   .catch(error => {
@@ -116,7 +116,7 @@ user.all(query).then(users => {
 // var userDel = new User('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5NTQzNWRlZjNlYWU3NjliMWQ2OTNjZSIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0yOVQxNDoyNzoxMy42NzVaIiwiaWF0IjoxNDk4NzQ2NDMzfQ.FKLIBDx5REmnplIvFD5AfsB9ofXrdidP9ApSkqhMBXo');
 // userDel.data = {};
 // userDel.data.email = 'test_test12@gigigo.com.mx';
-// userDel.update(undefined,id).then(user => {
+// user.update(userModel,id).then(user => {
 //   console.log(user);
 // }).catch(error => {
 //   console.log(error);

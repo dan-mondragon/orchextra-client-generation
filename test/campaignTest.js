@@ -1,5 +1,5 @@
 const idUser = '5942fdfb3157b629aab3eae8';
-const idCampaign = '5953f4876c368c7358d0c2d9';
+const id = '595c006df3eae769b1d6941e';
 const fs = require('fs');
 
 var Campaign = require('../src/campaigns');
@@ -7,12 +7,11 @@ var campaign = new Campaign('https://generation-api-coupons.s.gigigoapps.com', '
 
 var query = {
   _with: [],
-  fields: ['image','description'],
+  fields: ['image', 'description'],
   filter: {
     description: 'Esto es una prueba'
   },
-  page: 1,
-  perPage: 2
+  page: 2
 };
 
 var campaignModel = {
@@ -27,63 +26,56 @@ var campaignModel = {
   image: fs.createReadStream('facebook_318-136394.jpg')
 };
 
-campaign.getCampaigns(query).then(campaigns => {
-    if(campaigns instanceof Campaign){
-      campaigns.campaigns.forEach((campaign) => console.log(campaign));
-    }
-    else{
-      console.log(campaigns);
-    }
-  // console.log(campaigns[0].user.clients);
-  // console.log(campaigns);
+campaign.all(query).then(campaigns => {
+  console.log(campaigns);
+  campaigns.forEach((campaign) => console.log(campaign));
 })
-.catch(error => {
-  console.log(error);
-});
+  .catch(error => {
+    console.log(error);
+  });
 
-// campaign.getCampaign(idCampaign).then(campaignReturned => {
-//   // console.log(campaignReturned);
-//
-//   // campaignReturned.deleteCampaign().then(campaign => {
-//   //   console.log(campaign);
-//   // })
-//   // .catch(error => {
-//   //   console.log(error);
-//   // });
-//
+// campaign.get(id).then(campaignReturned => {
+//   console.log(campaignReturned);
+
+//   campaignReturned.delete().then(campaign => {
+//     console.log(campaign);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
+
 //   // campaignReturned.replaceCampaign(campaignModel).then(campaignReplaced => {
 //   //   console.log(campaignReplaced);
 //   // })
 //   // .catch(error => {
 //   //   console.log(error);
 //   // });
-//   console.log(campaignModel);
-//   campaignReturned.updateCampaign(campaignModel).then(campaign => {
-//     console.log(campaign);
-//   })
-//   .catch(error => {
-//     console.log(error);
-//   });
+
+//   // campaignReturned.updateCampaign(campaignModel).then(campaign => {
+//   //   console.log(campaign);
+//   // })
+//   // .catch(error => {
+//   //   console.log(error);
+//   // });
 // })
 // .catch(error => {
 //   console.log(error);
 // });
 
-// campaign.deleteCampaign(idCampaign).then(campaign => {
+// campaign.delete(id).then(campaign => {
 //   console.log(campaign);
 // })
 // .catch(error => {
 //   console.log(error);
 // });
-//
-// campaign.createCampaign(campaignModel).then(campaign => {
+
+// campaign.create(campaignModel).then(campaign => {
 //   console.log(campaign);
 // }).catch(error => {
 //   console.log(error);
 // });
 
-// console.log(campaignModel);
-// campaign.updateCampaign(campaignModel, idCampaign).then(campaign => {
+// campaign.update(campaignModel, id).then(campaign => {
 //   console.log(campaign);
 // })
 // .catch(error => {
@@ -91,7 +83,7 @@ campaign.getCampaigns(query).then(campaigns => {
 // });
 
 
-// campaign.replaceCampaign(campaignModel, idCampaign).then(campaign => {
+// campaign.replace(campaignModel, id).then(campaign => {
 //   console.log(campaign);
 // })
 // .catch(error => {

@@ -1,6 +1,7 @@
 const idUser = '5942fdfb3157b629aab3eae8';
 const idCampaign = '5941b6323157b629aab3eabb';
-const idChannel = '594aee6d3157b629aab3eb4c';
+
+const id = '59553829f3eae769b1d693e8';
 
 var Channel = require('../src/channels');
 var channel = new Channel('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5NTQzNWRlZjNlYWU3NjliMWQ2OTNjZSIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0yOVQxNDoyNzoxMy42NzVaIiwiaWF0IjoxNDk4NzQ2NDMzfQ.FKLIBDx5REmnplIvFD5AfsB9ofXrdidP9ApSkqhMBXo');
@@ -25,7 +26,7 @@ var channelModel = {
   skinId: '59480e333157b629aab3eaeb'
 };
 
-channel.getChannels(query).then(channels => {
+channel.all(query).then(channels => {
   // if(channels instanceof Channel){
     channels.forEach((channel) => console.log(channel));
   // }
@@ -37,10 +38,10 @@ channel.getChannels(query).then(channels => {
   console.log(error);
 });
 
-// channel.getChannel(idChannel, query).then(channelReturned => {
+// channel.get(id, query).then(channelReturned => {
 //   console.log(channel);
-//
-//   channelReturned.deleteChannel().then(channel => {
+
+//   channelReturned.delete().then(channel => {
 //     console.log(channel);
 //   })
 //   .catch(error => {
@@ -57,21 +58,31 @@ channel.getChannels(query).then(channels => {
 //   console.log(error);
 // });
 
-// channel.deleteChannel(idChannel).then(channel => {
+// channel.delete(id).then(channel => {
 //   console.log(channel);
 // })
 // .catch(error => {
 //   console.log(error);
 // });
 
-// channel.updateChannel(channelModel, idChannel).then(channel => {
+// channel.update(channelModel, id).then(channel => {
 //   console.log(channel);
 // })
 // .catch(error => {
 //   console.log(error);
 // });
 
-// channel.replaceChannel(channelModel, idChannel).then(channel => {
+// var channelTemp = new Channel('https://generation-api-coupons.s.gigigoapps.com', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwdWJsaWNJZCI6IjU5NTQzNWRlZjNlYWU3NjliMWQ2OTNjZSIsIm5hbWUiOiJEYXNoYm9hcmQiLCJ0eXBlIjoiZ2VuZXJhdGlvbiIsImxhc3RSZXF1ZXN0IjoiMjAxNy0wNi0yOVQxNDoyNzoxMy42NzVaIiwiaWF0IjoxNDk4NzQ2NDMzfQ.FKLIBDx5REmnplIvFD5AfsB9ofXrdidP9ApSkqhMBXo');
+// channelTemp.data = {
+//   name: 'landing 1.5',
+//   type: 'landingPages',
+//   slug: 'landing-1.5',
+//   campaignId: '594be2d53157b629aab3eb59',
+//   stock: 50,
+//   clientId: '5942b9b63157b629aab3eabc',
+//   skinId: '59480e333157b629aab3eaeb'
+// };
+// channelTemp.replace(undefined, id).then(channel => {
 //   console.log(channel);
 // })
 // .catch(error => {
