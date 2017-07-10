@@ -4,11 +4,11 @@ var rp = require('request-promise');
 
 class BaseCRUD {
 
-  constructor(url, token, user, count) {
+  constructor(url, token, model, count) {
     this.url = url;
     this.token = token;
-    if (typeof user !== 'undefined') {
-      this.data = user;
+    if (typeof model !== 'undefined') {
+      this.data = model;
     }
     if (typeof count !== 'undefined') {
       this.total_count = count;
@@ -25,16 +25,15 @@ class BaseCRUD {
 
   all(query) {
     var queryString = queryFn.setQueryString(query);
-    const users = axios.get(`${this.url}/${this.api}?${queryString}`, {
+    const entities = axios.get(`${this.url}/${this.api}?${queryString}`, {
       headers: { 'Authorization': 'Bearer ' + this.token }
     });
 
-    return users.then((result) => {
-      var Users = new Array();
-      result.data.forEach(user => {
-        Users.push(new this.constructor(this.url, this.token, user, result.headers['x-total-count']));
-      });
-      return Users;
+    return entities.then((result) => {
+      var Entities = result.data.map(entity => 
+        new this.constructor(this.url, this.token, entity, result.headers['x-total-count'])
+      );
+      return Entities;
     })
       .catch(error => {
         console.log(error);
@@ -47,10 +46,10 @@ class BaseCRUD {
 
   get(id, query) {
     var queryString = queryFn.setQueryString(query);
-    const user = axios.get(`${this.url}/${this.api}/${id}?${queryString}`, {
+    const entity = axios.get(`${this.url}/${this.api}/${id}?${queryString}`, {
       headers: { 'Authorization': 'Bearer ' + this.token }
     });
-    return user.then((result) => {
+    return entity.then((result) => {
       return new this.constructor(this.url, this.token, result.data);
     })
       .catch(error => {
@@ -78,23 +77,16 @@ class BaseCRUD {
         }
       };
       var inThis = this;
-      return rp(options)
-        .then(function (body) {
-          return new inThis.constructor(inThis.url, inThis.token, body);
-        })
-        .catch(function (err) {
-          return Promise.reject({
-            statusCode: err.statusCode,
-            errors: err.error.errors
-          });
-        });
+      const add = rp(options);
     }
     else {
       const add = axios.post(`${this.url}/${this.api}`, model, {
         headers: { 'Authorization': 'Bearer ' + this.token }
       });
+    }
 
-      return add.then(result => {
+    return add
+      .then(result => {
         return new this.constructor(this.url, this.token, result.data);
       })
         .catch(error => {
@@ -103,7 +95,6 @@ class BaseCRUD {
             errors: error.response.data
           });
         });
-    }
   }
 
   delete(id) {

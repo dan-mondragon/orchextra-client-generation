@@ -4,13 +4,13 @@ Orchextra SDK para el consumo del módulo de Generación.
 
 ### Instalación (npm)
 ```js
-npm install orchextra-client-generation
+npm install orchextra-coupons-generation
 ```
 ## Ejemplos
 
 ### Usuarios
 ```js
-var User = require('../src/users');
+var User = require('orchextra-coupons-generation/users');
 var user = new User('https://generation-api-coupons.s.gigigoapps.com', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 ```
 #### Listado de Usuarios
@@ -18,10 +18,15 @@ var user = new User('https://generation-api-coupons.s.gigigoapps.com', 'XXXXXXXX
 var query = {
     _with: [],
     fields: ['role','name'],
-    filter: ['name=Nehomar Correa']
+    filter: {
+      role: 'superadmin',
+      name: 'Nehomar Correa'
+    },
+    page: 1,
+    perPage: 5
 };
-user.getUsers(query).then(users => {  
-  users.forEach((user) => console.log(user.data));
+user.all(query).then(users => {
+    users.forEach((user) => console.log(user.data));
 })
 .catch(error => {
   console.log(error);
@@ -29,14 +34,13 @@ user.getUsers(query).then(users => {
 ```
 #### Información de Usuario
 ```js
-const idUser = '5942f7c73157b629aab3eae4';
-user.getUser(idUser).then(user => {
-  console.log(user);
+const id = '5942f7c73157b629aab3eae4';
+user.get(id).then(returnedUser => {
+  console.log(returnedUser);
 })
 .catch(error => {
   console.log(error);
 });
-
 ```
 #### Crear Usuario
 ```js
@@ -50,7 +54,7 @@ var userModel = {
   languageCode: 'es',
   projectsIds: ["5936cb98d318c404f94951e2"]
 };
-user.createUser(userModel).then(user => {
+user.create(userModel).then(user => {
   console.log(user);
 }).catch(error => {
   console.log(error);
@@ -58,7 +62,7 @@ user.createUser(userModel).then(user => {
 ```
 #### Eliminar Usuario
 ```js
-user.deleteUser(idUser).then(user => {
+user.delete(id).then(user => {
   console.log(user);
 })
 .catch(error => {
@@ -67,7 +71,7 @@ user.deleteUser(idUser).then(user => {
 ```
 #### Reemplazar Usuario
 ```js
-user.replaceUser(userModel,idUser).then(user => {
+user.replace(userModel, id).then(user => {
   console.log(user);
 }).catch(error => {
   console.log(error);
@@ -75,7 +79,10 @@ user.replaceUser(userModel,idUser).then(user => {
 ```
 #### Actualizar Usuario
 ```js
-user.updateUser(userModel,idUser).then(user => {
+var userUpd = new User('https://generation-api-coupons.s.gigigoapps.com', 'XXXXXXXXXXXXXXXXXXXXX');
+userUpd.data = {};
+userUpd.data.email = 'test@gigigo.com.mx';
+userUpd.update(undefined, id).then(user => {
   console.log(user);
 }).catch(error => {
   console.log(error);
@@ -86,9 +93,9 @@ Debido a que los métodos devuelven un objeto (en este caso del tipo "User"), es
 Por ejemplo, eliminar un usuario de tu arreglo de usuarios. Para lo anterior, ya no es necesario enviar el id.
 ```js
 
-user.getUsers(query).then(users => {  
+user.all(query).then(users => {  
   users.forEach((user) => console.log(user.data));
-  users[4].deleteUser().then(user => {
+  users[4].delete().then(user => {
       console.log(user);
     })
     .catch(error => {
@@ -102,10 +109,10 @@ user.getUsers(query).then(users => {
 También puedes, por ejemplo, actualizar un objeto de la siguiente forma
 ```js
 
-user.getUser(idUser).then(returnedUser => {
+user.get(id).then(returnedUser => {
   returnedUser.data.name = 'Ricardo';
   returnedUser.data.username = 'ricardo@gmail.com';
-  returnedUser.updateUser().then(user => {
+  returnedUser.update().then(user => {
     console.log(user);
   }).catch(error => {
     console.log(error);
@@ -124,24 +131,27 @@ var campaign = new Campaign('https://generation-api-coupons.s.gigigoapps.com', '
 #### Listado de Campañas
 ```js
 var query = {
-    _with: [],
-    fields: ['image','description'],
-    filter: ['description=campaña prueba']
+  _with: [],
+  fields: ['image', 'description'],
+  filter: {
+    description: 'Esto es una prueba'
+  },
+  page: 2
 };
 
-campaign.getCampaigns(query).then(campaigns => {
+campaign.all(query).then(campaigns => {
   campaigns.forEach((campaign) => console.log(campaign));
 })
-.catch(error => {
-  console.log(error);
-});
+  .catch(error => {
+    console.log(error);
+  });
 ```
 #### Información de Campaña
 ```js
-const idCampaign = '594beaff3157b629aab3eb5a';
+const id = '594beaff3157b629aab3eb5a';
 
-campaign.getCampaign(idCampaign).then(campaign => {
-  console.log(campaign);
+campaign.get(id).then(campaignReturned => {
+  console.log(campaignReturned);
 })
 .catch(error => {
   console.log(error);
@@ -151,16 +161,16 @@ campaign.getCampaign(idCampaign).then(campaign => {
 ```js
 var campaignModel = {
   type: "digital",
-  name: "campaña nueva 2",
-  legals: "Legales",
-  description: "Descripción",
+  name: "campaña nueva 4",
+  legals: "Legales N",
+  description: "Descripción Nueva 2",
   active: 'true',
   expirationDate: "2018-06-20T00:00:00.000Z",
   startDate: "2017-06-20T00:00:00.000Z",
   projectId: "5949957e3157b629aab3eb28",
   image: fs.createReadStream('facebook_318-136394.jpg')
 };
-campaign.createCampaign(campaignModel).then(campaign => {
+campaign.create(campaignModel).then(campaign => {
   console.log(campaign);
 }).catch(error => {
   console.log(error);
@@ -168,7 +178,7 @@ campaign.createCampaign(campaignModel).then(campaign => {
 ```
 #### Eliminar Campaña
 ```js
-campaign.deleteCampaign(idCampaign).then(campaign => {
+campaign.delete(id).then(campaign => {
   console.log(campaign);
 })
 .catch(error => {
@@ -177,16 +187,16 @@ campaign.deleteCampaign(idCampaign).then(campaign => {
 ```
 #### Actualizar Campaña
 ```js
-campaign.updateCampaign(campaignModel, idCampaign).then(campaign => {
+campaign.update(campaignModel, id).then(campaign => {
   console.log(campaign);
 })
 .catch(error => {
   console.log(error);
 });
-```
+```0
 #### Reemplazar Campaña
 ```js
-campaign.replaceCampaign(campaignModel, idCampaign).then(campaign => {
+campaign.replace(campaignModel, id).then(campaign => {
   console.log(campaign);
 })
 .catch(error => {
@@ -197,9 +207,9 @@ campaign.replaceCampaign(campaignModel, idCampaign).then(campaign => {
 Debido a que los métodos devuelven un objeto (en este caso del tipo "Campaign"), es posible realizar acciones sobre ellos.
 Por ejemplo, eliminar la campaña actual. Para lo anterior, ya no es necesario enviar el id.
 ```js
-campaign.getCampaign(idCampaign).then(campaignReturned => {
+campaign.get(id).then(campaignReturned => {
   console.log(campaignReturned);
-  campaignReturned.deleteCampaign().then(campaign => {
+  campaignReturned.delete().then(campaign => {
     console.log(campaign);
   })
   .catch(error => {

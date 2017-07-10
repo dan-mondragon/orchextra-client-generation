@@ -34,7 +34,7 @@ campaign.all(query).then(campaigns => {
     console.log(error);
   });
 
-// campaign.get(id).then(campaignReturned => {
+//  campaign.get(id).then(campaignReturned => {
 //   console.log(campaignReturned);
 
 //   campaignReturned.delete().then(campaign => {

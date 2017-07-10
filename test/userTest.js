@@ -35,7 +35,6 @@ var query = {
       role: 'superadmin',
       name: 'Nehomar Correa'
     },
-    // filter: ['role=superadmin'],
     page: 1,
     perPage: 2
 };
@@ -55,25 +54,25 @@ user.all(query).then(users => {
 
 // user.get(id).then(returnedUser => {
 //   console.log(returnedUser);
-//   // returnedUser.replaceUser(userModel).then(user => {
-//   //   console.log(user);
-//   // }).catch(error => {
-//   //   console.log(error);
-//   // });
+//   returnedUser.replaceUser(userModel).then(user => {
+//     console.log(user);
+//   }).catch(error => {
+//     console.log(error);
+//   });
 //   returnedUser.delete().then(user => {
 //     console.log(user);
 //   })
 //   .catch(error => {
 //     console.log(error);
 //   });
-//
-//   // returnedUser.data.name = 'Ricardo 7';
-//   // returnedUser.data.username = 'Ricardo 7';
-//   // returnedUser.updateUser().then(user => {
-//   //   console.log(user);
-//   // }).catch(error => {
-//   //   console.log(error);
-//   // });
+
+//   returnedUser.data.name = 'Ricardo 7';
+//   returnedUser.data.username = 'Ricardo 7';
+//   returnedUser.updateUser().then(user => {
+//     console.log(user);
+//   }).catch(error => {
+//     console.log(error);
+//   });
 // })
 // .catch(error => {
 //   console.log(error);

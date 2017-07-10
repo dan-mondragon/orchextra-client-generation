@@ -1,5 +1,5 @@
 {
-  "name": "orchextra-coupons-generation-code",
+  "name": "orchextra-coupons-generation",
   "version": "1.0.5",
   "description": "Orchextra SDK para el consumo del módulo de Genereación.",
   "main": "campaign.js",
